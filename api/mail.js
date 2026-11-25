@@ -12,6 +12,8 @@ const MAIL = {
 
 Write your email content here.
 
+updated content
+
 Regards,
 Your Name`
 };
