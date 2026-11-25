@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opening Gmail...</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:560px;margin:24px auto;padding:0 16px;line-height:1.5}
+  a.btn{display:inline-block;margin:10px 8px 0 0;padding:10px 14px;border-radius:6px;background:#2563eb;color:#fff;text-decoration:none}
+  .muted{color:#6b7280;font-size:14px}
+</style>
+</head>
+<body>
+
+<h2>Opening Gmail...</h2>
+<p class="muted">If nothing happens, use one of these:</p>
+<a class="btn" id="b-gmail">Open in Gmail</a>
+<a class="btn" id="b-outlook">Open in Outlook</a>
+<a class="btn" id="b-mailto">Default mail app</a>
+
+<script>
+/* ============ EDIT ONLY THIS BLOCK ============ */
+const MAIL = {
+  // Multiple ids: put each one in quotes, separated by commas
+  to:  ["person1@example.com", "person2@example.com"],
+  cc:  ["cc1@example.com", "cc2@example.com"],
+  bcc: ["bcc1@example.com", "bcc2@example.com"],   // leave as [] if not needed
+
+  subject: "Your subject here",
+
+  // Use backticks so line breaks are kept as typed
+  body: `Hello,
+
+Write your email content here.
+
+Regards,
+Your Name`
+};
+/* ============================================== */
+
+const e = encodeURIComponent;
+const $ = id => document.getElementById(id);
+const join = arr => arr.map(s => s.trim()).filter(Boolean).join(",");
+
+const to = join(MAIL.to), cc = join(MAIL.cc), bcc = join(MAIL.bcc);
+
+const pairs = (keys) => [
+  [keys.to, to], [keys.cc, cc], [keys.bcc, bcc], [keys.subject, MAIL.subject], [keys.body, MAIL.body]
+].filter(p => p[1]).map(p => p[0] + "=" + e(p[1])).join("&");
+
+const gmail   = "https://mail.google.com/mail/?view=cm&fs=1&" +
+                pairs({to:"to",cc:"cc",bcc:"bcc",subject:"su",body:"body"});
+const outlook = "https://outlook.live.com/mail/0/deeplink/compose?" +
+                pairs({to:"to",cc:"cc",bcc:"bcc",subject:"subject",body:"body"});
+const mailto  = "mailto:" + to + "?" +
+                [["cc",cc],["bcc",bcc],["subject",MAIL.subject],["body",MAIL.body]]
+                  .filter(p => p[1]).map(p => p[0] + "=" + e(p[1])).join("&");
+
+$("b-gmail").href = gmail;
+$("b-outlook").href = outlook;
+$("b-mailto").href = mailto;
+
+// Go straight to Gmail. Add ?stay to the page URL to see this page instead (for testing).
+if (!location.search.includes("stay")) {
+  location.replace(gmail);
+}
+</script>
+</body>
+</html>
